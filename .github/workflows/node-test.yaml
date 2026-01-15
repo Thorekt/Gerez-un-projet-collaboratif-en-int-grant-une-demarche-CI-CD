@@ -33,10 +33,10 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run Angular tests
-        run: npm run test -- --watch=false --browsers=ChromeHeadless
+        run: npm run test -- --watch=false --browsers=ChromeHeadless --code-coverage --reporters
       - name: Archive test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-reports-node-${{ matrix.node-version }}
-          path: front/test-results/**/*.xml
+          path: front/coverage/bobapp/*
