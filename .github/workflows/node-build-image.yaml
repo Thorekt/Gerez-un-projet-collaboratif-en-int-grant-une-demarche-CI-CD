@@ -14,7 +14,7 @@ defaults:
     working-directory: front
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
