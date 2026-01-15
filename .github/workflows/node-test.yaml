@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run Angular tests
-        run: npm run test
+        run: npm run test --watch=false --browsers=ChromeHeadless
       - name: Archive test reports
         if: always()
         uses: actions/upload-artifact@v4
