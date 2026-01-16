@@ -40,3 +40,5 @@ jobs:
         with:
           name: test-reports-node-${{ matrix.node-version }}
           path: front/coverage/bobapp/*
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v7

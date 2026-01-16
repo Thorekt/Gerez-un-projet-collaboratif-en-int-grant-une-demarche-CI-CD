@@ -38,3 +38,5 @@ jobs:
         with:
           name: test-reports
           path: back/target/surefire-reports/*.xml
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v7
