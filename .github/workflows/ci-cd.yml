@@ -99,18 +99,36 @@ jobs:
             thorekt/bobapp-front:latest
             thorekt/bobapp-front:${{ github.sha }}
 
+  # SonarQube code quality scan
   scan-sonarqube:
     runs-on: ubuntu-latest
     needs: [tests-java, tests-node]
     steps:
       - uses: actions/checkout@v4
+
+      - name: Download Java artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: test-reports
+          path: back/target/surefire-reports/*.xml
+
+      - name: Download Node.js artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: test-reports-node-25.x
+          path: front/coverage/bobapp/*
+      
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v7
         with:
           args: >
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.sources=back/src/main/java
+
+            -Dsonar.sources=back/src/main/java,front/src
             -Dsonar.java.binaries=back/target/classes
+
+            -Dsonar.junit.reportPaths=artifacts/java
+            -Dsonar.javascript.lcov.reportPaths=artifacts/node/lcov.info
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
