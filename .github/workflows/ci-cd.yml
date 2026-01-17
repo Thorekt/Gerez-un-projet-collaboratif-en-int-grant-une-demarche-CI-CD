@@ -32,6 +32,12 @@ jobs:
         with:
           name: test-reports
           path: back/target/surefire-reports/*.xml
+      - name: Archive binaries for SonarQube
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries
+          path: back/target/classes
 
   # Node.js test using multiple Node versions
   tests-node:
@@ -106,13 +112,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download Java artifact
+      - name: Download Java test artifact
         uses: actions/download-artifact@v4
         with:
           name: test-reports
           path: back/target/surefire-reports/*.xml
+      
+      - name: Download Java binaries artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: binaries
+          path: back/target/classes
 
-      - name: Download Node.js artifact
+      - name: Download Node.js test artifact
         uses: actions/download-artifact@v4
         with:
           name: test-reports-node-25.x
