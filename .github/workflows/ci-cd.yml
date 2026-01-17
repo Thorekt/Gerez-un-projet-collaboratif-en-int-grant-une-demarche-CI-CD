@@ -61,44 +61,6 @@ jobs:
           name: test-reports-node-${{ matrix.node-version }}
           path: front/coverage/bobapp/lcov.info
 
-  # Build and publish Docker images for both Java backend and Node frontend
-  build-and-publish-images:  
-    runs-on: ubuntu-latest
-    needs: [tests-java, tests-node]
-    defaults:
-      run:
-        working-directory: back
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and push Docker image for Java backend
-        uses: docker/build-push-action@v5
-        with:
-          context: ./back
-          push: true
-          tags: |
-            thorekt/bobapp-back:latest
-            thorekt/bobapp-back:${{ github.sha }}
-
-      - name: Build and push Docker image for Node frontend
-        uses: docker/build-push-action@v5
-        with:
-          context: ./front
-          push: true
-          tags: |
-            thorekt/bobapp-front:latest
-            thorekt/bobapp-front:${{ github.sha }}
-
   # SonarQube code quality scan
   scan-sonarqube:
     runs-on: ubuntu-latest
@@ -145,3 +107,41 @@ jobs:
             -Dsonar.javascript.lcov.reportPaths=artifacts/node/lcov.info
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    # Build and publish Docker images for both Java backend and Node frontend
+  build-and-publish-images:  
+    runs-on: ubuntu-latest
+    needs: [scan-sonarqube]
+    defaults:
+      run:
+        working-directory: back
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image for Java backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./back
+          push: true
+          tags: |
+            thorekt/bobapp-back:latest
+            thorekt/bobapp-back:${{ github.sha }}
+
+      - name: Build and push Docker image for Node frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./front
+          push: true
+          tags: |
+            thorekt/bobapp-front:latest
+            thorekt/bobapp-front:${{ github.sha }}
