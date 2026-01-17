@@ -53,13 +53,13 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run Angular tests
-        run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless --code-coverage --reporters
+        run: npm run test-ci
       - name: Archive test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-reports-node-${{ matrix.node-version }}
-          path: front/coverage/bobapp/*
+          path: front/coverage/bobapp/lcov.info
 
   # Build and publish Docker images for both Java backend and Node frontend
   build-and-publish-images:  
@@ -129,7 +129,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: test-reports-node-25.x
-          path: front/coverage/bobapp/*
+          path: front/coverage/bobapp/lcov.info
       
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v7
