@@ -93,33 +93,6 @@ jobs:
           name: test-reports-node-25.x
           path: front/coverage/bobapp/lcov.info
 
-      - name: SonarQube Scan (back only) 
-        uses: SonarSource/sonarqube-scan-action@v7
-        with:
-          projectBaseDir: back
-          args: >
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY_BACK }}
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}            
-            -Dsonar.sources=src
-            -Dsonar.java.binaries=target/classes
-            -Dsonar.junit.reportPaths=back/target/surefire-reports
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACK }}
-      
-      - name: SonarQube Scan (front only) 
-        uses: SonarSource/sonarqube-scan-action@v7
-        with:
-          projectBaseDir: front
-          args: >
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY_FRONT }}
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-
-            -Dsonar.sources=src
-            -Dsonar.javascript.lcov.reportPaths=front/coverage/bobapp/lcov.info
-            
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONT }}
-
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v7
         with:
