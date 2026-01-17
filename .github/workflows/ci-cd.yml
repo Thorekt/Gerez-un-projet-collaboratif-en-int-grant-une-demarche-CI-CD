@@ -99,7 +99,10 @@ jobs:
           projectBaseDir: back
           args: >
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY_BACK }}
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}            
+            -Dsonar.sources=src
+            -Dsonar.java.binaries=target/classes
+            -Dsonar.junit.reportPaths=back/target/surefire-reports
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACK }}
       
@@ -110,6 +113,10 @@ jobs:
           args: >
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY_FRONT }}
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+
+            -Dsonar.sources=src
+            -Dsonar.javascript.lcov.reportPaths=front/coverage/bobapp/lcov.info
+            
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONT }}
 
@@ -123,8 +130,8 @@ jobs:
             -Dsonar.sources=back/src,front/src
             -Dsonar.java.binaries=back/target/classes
 
-            -Dsonar.junit.reportPaths=artifacts/java
-            -Dsonar.javascript.lcov.reportPaths=artifacts/node/lcov.info
+            -Dsonar.junit.reportPaths=back/target/surefire-reports
+            -Dsonar.javascript.lcov.reportPaths=front/coverage/bobapp/lcov.info
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
